@@ -63,7 +63,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_marginBottom="16dp"
-                android:background="@drawable/bg_search"
+                android:background="@drawable/bg_input_field"
                 android:hint="Full Name"
                 android:paddingHorizontal="20dp"
                 android:textColor="#2D5016"
@@ -76,7 +76,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_marginBottom="16dp"
-                android:background="@drawable/bg_search"
+                android:background="@drawable/bg_input_field"
                 android:hint="Email (Phinmaed or Gmail)"
                 android:paddingHorizontal="20dp"
                 android:textColor="#2D5016"
@@ -85,11 +85,24 @@
                 android:inputType="textEmailAddress" />
 
             <EditText
+                android:id="@+id/etDepartment"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/bg_input_field"
+                android:hint="Department (e.g. CITE, CEA)"
+                android:paddingHorizontal="20dp"
+                android:textColor="#2D5016"
+                android:textColorHint="#C9B896"
+                android:textSize="15sp"
+                android:inputType="text" />
+
+            <EditText
                 android:id="@+id/etPassword"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_marginBottom="24dp"
-                android:background="@drawable/bg_search"
+                android:background="@drawable/bg_input_field"
                 android:hint="Password"
                 android:paddingHorizontal="20dp"
                 android:textColor="#2D5016"
@@ -107,6 +120,7 @@
             android:textAllCaps="false"
             android:textSize="18sp"
             android:textStyle="bold"
+            android:textColor="@android:color/white"
             app:backgroundTint="#2D5016"
             app:cornerRadius="12dp" />
 
