@@ -90,7 +90,11 @@
         android:id="@+id/nav_about"
         android:name="com.yutahnahsyah.upsmartcanteenfrontend.fragments.AboutFragment"
         android:label="About"
-        tools:layout="@layout/fragment_about" />
+        tools:layout="@layout/fragment_about">
+        <action
+            android:id="@+id/action_nav_about_to_nav_support"
+            app:destination="@id/nav_support" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_support"

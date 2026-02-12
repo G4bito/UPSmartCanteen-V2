@@ -235,7 +235,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="We support GCash, PayMaya, and Cash on Pickup."
+                        android:text="We do Cash and Stubs"
                         android:textColor="#666666"
                         android:textSize="13sp" />
                 </LinearLayout>

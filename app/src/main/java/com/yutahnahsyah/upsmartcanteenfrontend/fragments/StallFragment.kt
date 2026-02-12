@@ -1,9 +1,12 @@
 package com.yutahnahsyah.upsmartcanteenfrontend.fragments
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -34,6 +37,7 @@ class StallFragment : Fragment() {
     super.onViewCreated(view, savedInstanceState)
 
     val rv = view.findViewById<RecyclerView>(R.id.recyclerView)
+    val searchBar = view.findViewById<EditText>(R.id.searchBar)
 
     adapter = StoreAdapter(storeList) { selectedStore ->
       val bundle = Bundle().apply {
@@ -44,5 +48,14 @@ class StallFragment : Fragment() {
 
     rv.layoutManager = LinearLayoutManager(requireContext())
     rv.adapter = adapter
+
+    // Implement real-time search filtering
+    searchBar.addTextChangedListener(object : TextWatcher {
+      override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+      override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+        adapter.filter(s.toString())
+      }
+      override fun afterTextChanged(s: Editable?) {}
+    })
   }
 }

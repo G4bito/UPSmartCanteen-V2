@@ -30,86 +30,141 @@
             android:textColor="#C9B896"
             android:textSize="16sp" />
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp">
+            android:layout_marginTop="32dp"
+            android:orientation="vertical">
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                app:cardCornerRadius="50dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="#F2EFE9">
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilFullName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:errorEnabled="true"
+                app:hintEnabled="false">
 
-                <ImageView
-                    android:id="@+id/registerProfileImage"
+                <EditText
+                    android:id="@+id/etFullName"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="20dp"
-                    android:src="@android:drawable/ic_menu_camera"
-                    app:tint="#C9B896" />
-            </androidx.cardview.widget.CardView>
-        </RelativeLayout>
+                    android:layout_height="55dp"
+                    android:background="@drawable/bg_input_field"
+                    android:hint="Full Name"
+                    android:inputType="textPersonName"
+                    android:paddingHorizontal="20dp"
+                    android:textColor="#2D5016"
+                    android:textColorHint="#C9B896"
+                    android:textSize="15sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:errorEnabled="true"
+                app:hintEnabled="false">
+
+                <EditText
+                    android:id="@+id/etEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:background="@drawable/bg_input_field"
+                    android:hint="Email (Phinmaed or Gmail)"
+                    android:inputType="textEmailAddress"
+                    android:paddingHorizontal="20dp"
+                    android:textColor="#2D5016"
+                    android:textColorHint="#C9B896"
+                    android:textSize="15sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilDepartment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:errorEnabled="true"
+                app:hintEnabled="false">
+
+                <EditText
+                    android:id="@+id/etDepartment"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:background="@drawable/bg_input_field"
+                    android:hint="Department (e.g. CITE, CEA)"
+                    android:inputType="text"
+                    android:paddingHorizontal="20dp"
+                    android:textColor="#2D5016"
+                    android:textColorHint="#C9B896"
+                    android:textSize="15sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:errorEnabled="true"
+                app:helperText="Min 8 chars, Uppercase, Number &amp; Symbol"
+                app:helperTextTextColor="#999999"
+                app:hintEnabled="false"
+                app:passwordToggleEnabled="true"
+                app:passwordToggleTint="#2D5016">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:background="@drawable/bg_input_field"
+                    android:hint="Password"
+                    android:inputType="textPassword"
+                    android:paddingHorizontal="20dp"
+                    android:textColor="#2D5016"
+                    android:textColorHint="#C9B896"
+                    android:textSize="15sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilConfirmPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                app:errorEnabled="true"
+                app:hintEnabled="false"
+                app:passwordToggleEnabled="true"
+                app:passwordToggleTint="#2D5016">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etConfirmPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:background="@drawable/bg_input_field"
+                    android:hint="Confirm Password"
+                    android:inputType="textPassword"
+                    android:paddingHorizontal="20dp"
+                    android:textColor="#2D5016"
+                    android:textColorHint="#C9B896"
+                    android:textSize="15sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:orientation="vertical">
+            android:layout_marginBottom="16dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/etFullName"
-                android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/bg_input_field"
-                android:hint="Full Name"
-                android:paddingHorizontal="20dp"
-                android:textColor="#2D5016"
-                android:textColorHint="#C9B896"
-                android:textSize="15sp"
-                android:inputType="textPersonName" />
+            <CheckBox
+                android:id="@+id/cbTerms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:buttonTint="#2D5016" />
 
-            <EditText
-                android:id="@+id/etEmail"
-                android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/bg_input_field"
-                android:hint="Email (Phinmaed or Gmail)"
-                android:paddingHorizontal="20dp"
-                android:textColor="#2D5016"
-                android:textColorHint="#C9B896"
-                android:textSize="15sp"
-                android:inputType="textEmailAddress" />
-
-            <EditText
-                android:id="@+id/etDepartment"
-                android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/bg_input_field"
-                android:hint="Department (e.g. CITE, CEA)"
-                android:paddingHorizontal="20dp"
-                android:textColor="#2D5016"
-                android:textColorHint="#C9B896"
-                android:textSize="15sp"
-                android:inputType="text" />
-
-            <EditText
-                android:id="@+id/etPassword"
-                android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:layout_marginBottom="24dp"
-                android:background="@drawable/bg_input_field"
-                android:hint="Password"
-                android:paddingHorizontal="20dp"
-                android:textColor="#2D5016"
-                android:textColorHint="#C9B896"
-                android:textSize="15sp"
-                android:inputType="textPassword" />
-
+            <TextView
+                android:id="@+id/tvTermsAndPrivacy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="I agree to the Terms &amp; Conditions and Privacy Policy"
+                android:textColor="#757575"
+                android:textSize="13sp" />
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
@@ -118,9 +173,9 @@
             android:layout_height="60dp"
             android:text="Sign Up"
             android:textAllCaps="false"
+            android:textColor="@android:color/white"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="@android:color/white"
             app:backgroundTint="#2D5016"
             app:cornerRadius="12dp" />
 

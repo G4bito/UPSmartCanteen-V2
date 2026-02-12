@@ -10,9 +10,11 @@ import com.yutahnahsyah.upsmartcanteenfrontend.R
 import com.yutahnahsyah.upsmartcanteenfrontend.data.model.Store
 
 class StoreAdapter(
-  private val stores: List<Store>,
+  private var stores: List<Store>,
   private val onClick: (Store) -> Unit
 ) : RecyclerView.Adapter<StoreAdapter.StoreViewHolder>() {
+
+  private var fullStoreList: List<Store> = stores
 
   class StoreViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val name: TextView = view.findViewById(R.id.storeName)
@@ -35,4 +37,16 @@ class StoreAdapter(
   }
 
   override fun getItemCount() = stores.size
+
+  fun filter(query: String) {
+    stores = if (query.isEmpty()) {
+      fullStoreList
+    } else {
+      fullStoreList.filter { 
+        it.name.contains(query, ignoreCase = true) || 
+        it.category.contains(query, ignoreCase = true) 
+      }
+    }
+    notifyDataSetChanged()
+  }
 }

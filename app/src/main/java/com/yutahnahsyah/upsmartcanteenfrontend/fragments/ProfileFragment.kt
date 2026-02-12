@@ -5,10 +5,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
+import com.yutahnahsyah.upsmartcanteenfrontend.OnboardingActivity
 import com.yutahnahsyah.upsmartcanteenfrontend.R
 import com.yutahnahsyah.upsmartcanteenfrontend.auth.Login
 
@@ -24,6 +26,14 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Onboarding Help Icon (Question Mark)
+        val onboardingInfoIcon = view.findViewById<ImageView>(R.id.onboardingInfoIcon)
+        onboardingInfoIcon.setOnClickListener {
+            val intent = Intent(requireContext(), OnboardingActivity::class.java)
+            intent.putExtra("forceShow", true)
+            startActivity(intent)
+        }
 
         val editProfileCard = view.findViewById<MaterialCardView>(R.id.editProfileCard)
         editProfileCard.setOnClickListener {
@@ -53,16 +63,6 @@ class ProfileFragment : Fragment() {
         val helpCard = view.findViewById<MaterialCardView>(R.id.helpCard)
         helpCard.setOnClickListener {
             findNavController().navigate(R.id.action_nav_profile_to_nav_support)
-        }
-
-        val termsCard = view.findViewById<MaterialCardView>(R.id.termsCard)
-        termsCard.setOnClickListener {
-            findNavController().navigate(R.id.action_nav_profile_to_nav_terms)
-        }
-
-        val privacyCard = view.findViewById<MaterialCardView>(R.id.privacyCard)
-        privacyCard.setOnClickListener {
-            findNavController().navigate(R.id.action_nav_profile_to_nav_privacy)
         }
 
         val logoutButton = view.findViewById<MaterialButton>(R.id.logoutButton)

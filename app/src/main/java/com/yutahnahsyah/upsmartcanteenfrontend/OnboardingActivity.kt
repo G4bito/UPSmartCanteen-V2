@@ -1,5 +1,6 @@
 package com.yutahnahsyah.upsmartcanteenfrontend
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,6 +25,18 @@ class OnboardingActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Check if onboarding has already been completed
+        val sharedPref = getSharedPreferences("onboarding", Context.MODE_PRIVATE)
+        val isFirstTime = sharedPref.getBoolean("isFirstTime", true)
+        
+        // If not first time and not explicitly requested from Profile, skip to Login
+        val forceShow = intent.getBooleanExtra("forceShow", false)
+        if (!isFirstTime && !forceShow) {
+            navigateToLogin()
+            return
+        }
+
         setContentView(R.layout.activity_onboarding)
 
         viewPager = findViewById(R.id.viewPager)
@@ -59,11 +72,13 @@ class OnboardingActivity : AppCompatActivity() {
             if (viewPager.currentItem + 1 < onboardingItems.size) {
                 viewPager.currentItem += 1
             } else {
+                markOnboardingComplete()
                 navigateToLogin()
             }
         }
 
         tvSkip.setOnClickListener {
+            markOnboardingComplete()
             navigateToLogin()
         }
 
@@ -80,6 +95,14 @@ class OnboardingActivity : AppCompatActivity() {
         })
     }
 
+    private fun markOnboardingComplete() {
+        val sharedPref = getSharedPreferences("onboarding", Context.MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            putBoolean("isFirstTime", false)
+            apply()
+        }
+    }
+
     private fun setupIndicators(count: Int) {
         val indicators = arrayOfNulls<ImageView>(count)
         val layoutParams: LinearLayout.LayoutParams =
@@ -87,7 +110,7 @@ class OnboardingActivity : AppCompatActivity() {
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
-        layoutParams.setMargins(6, 0, 6, 0) // Tight spacing: 6px on each side
+        layoutParams.setMargins(6, 0, 6, 0)
 
         for (i in indicators.indices) {
             indicators[i] = ImageView(applicationContext)
