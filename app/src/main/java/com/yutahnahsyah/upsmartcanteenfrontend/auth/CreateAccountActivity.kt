@@ -4,149 +4,177 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
-import android.text.Spanned
 import android.text.TextWatcher
-import android.widget.CheckBox
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import android.view.View
+import android.widget.*
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.yutahnahsyah.upsmartcanteenfrontend.MainActivity
-import com.yutahnahsyah.upsmartcanteenfrontend.R
+import com.yutahnahsyah.upsmartcanteenfrontend.*
+import kotlinx.coroutines.launch
 
-class CreateAccountActivity : AppCompatActivity() {
+class CreateAccountActivity : BaseActivity() {
 
-    private lateinit var etFullName: EditText
-    private lateinit var etEmail: EditText
-    private lateinit var etDepartment: EditText
-    private lateinit var etPassword: EditText
-    private lateinit var etConfirmPassword: EditText
-    private lateinit var cbTerms: CheckBox
-    private lateinit var btnRegister: MaterialButton
+  private lateinit var etEmployeeId: EditText
+  private lateinit var etFullName: EditText
+  private lateinit var etEmail: EditText
+  private lateinit var spinnerDepartment: Spinner
+  private lateinit var etPassword: EditText
+  private lateinit var etConfirmPassword: EditText
+  private lateinit var cbTerms: CheckBox
+  private lateinit var btnRegister: MaterialButton
+  private lateinit var progressBar: ProgressBar
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_create_account)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_create_account)
 
-        etFullName = findViewById(R.id.etFullName)
-        etEmail = findViewById(R.id.etEmail)
-        etDepartment = findViewById(R.id.etDepartment)
-        etPassword = findViewById(R.id.etPassword)
-        etConfirmPassword = findViewById(R.id.etConfirmPassword)
-        cbTerms = findViewById(R.id.cbTerms)
-        val tvTermsAndPrivacy = findViewById<TextView>(R.id.tvTermsAndPrivacy)
-        btnRegister = findViewById(R.id.btnRegister)
-        val tvLogin = findViewById<TextView>(R.id.tvLogin)
+    // Initialize Views
+    etEmployeeId = findViewById(R.id.etEmployeeId)
+    etFullName = findViewById(R.id.etFullName)
+    etEmail = findViewById(R.id.etEmail)
+    spinnerDepartment = findViewById(R.id.spinnerDepartment)
+    etPassword = findViewById(R.id.etPassword)
+    etConfirmPassword = findViewById(R.id.etConfirmPassword)
+    cbTerms = findViewById(R.id.cbTerms)
+    btnRegister = findViewById(R.id.btnRegister)
+    progressBar = findViewById(R.id.progressBar)
+    val tvTermsAndPrivacy = findViewById<TextView>(R.id.tvTermsAndPrivacy)
+    val tvLogin = findViewById<TextView>(R.id.tvLogin)
 
-        // Block space characters in password fields
-        val noSpaceFilter = InputFilter { source, start, end, _, _, _ ->
-            for (i in start until end) {
-                if (Character.isWhitespace(source[i])) {
-                    return@InputFilter ""
-                }
-            }
-            null
-        }
-        etPassword.filters = arrayOf(noSpaceFilter)
-        etConfirmPassword.filters = arrayOf(noSpaceFilter)
+    setupDepartmentSpinner()
 
-        // Initial state
-        btnRegister.isEnabled = false
+    val noSpaceFilter = InputFilter { source, start, end, _, _, _ ->
+      for (i in start until end) {
+        if (Character.isWhitespace(source[i])) return@InputFilter ""
+      }
+      null
+    }
+    etPassword.filters = arrayOf(noSpaceFilter)
+    etConfirmPassword.filters = arrayOf(noSpaceFilter)
 
-        // Add listeners to all fields
-        val watcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                checkFields()
-            }
-            override fun afterTextChanged(s: Editable?) {}
-        }
+    val watcher = object : TextWatcher {
+      override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+      override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+        checkFields()
+      }
 
-        etFullName.addTextChangedListener(watcher)
-        etEmail.addTextChangedListener(watcher)
-        etDepartment.addTextChangedListener(watcher)
-        etPassword.addTextChangedListener(watcher)
-        etConfirmPassword.addTextChangedListener(watcher)
-        cbTerms.setOnCheckedChangeListener { _, _ -> checkFields() }
+      override fun afterTextChanged(s: Editable?) {}
+    }
+    etEmployeeId.addTextChangedListener(watcher)
+    etFullName.addTextChangedListener(watcher)
+    etEmail.addTextChangedListener(watcher)
+    etPassword.addTextChangedListener(watcher)
+    etConfirmPassword.addTextChangedListener(watcher)
+    cbTerms.setOnCheckedChangeListener { _, _ -> checkFields() }
 
-        tvTermsAndPrivacy.setOnClickListener {
-            showTermsDialog()
-        }
+    tvTermsAndPrivacy.setOnClickListener { showTermsDialog() }
+    tvLogin.setOnClickListener { finish() }
 
-        btnRegister.setOnClickListener {
-            val name = etFullName.text.toString().trim()
-            val email = etEmail.text.toString().trim()
-            val department = etDepartment.text.toString().trim()
-            val password = etPassword.text.toString() // No trim to catch spaces if filter failed
-            val confirmPassword = etConfirmPassword.text.toString()
+    btnRegister.setOnClickListener {
+      val id = etEmployeeId.text.toString().trim()
+      val name = etFullName.text.toString().trim()
+      val email = etEmail.text.toString().trim()
+      val dept = spinnerDepartment.selectedItem.toString()
+      val pass = etPassword.text.toString()
+      val confirm = etConfirmPassword.text.toString()
 
-            if (validateInput(name, email, department, password, confirmPassword)) {
-                Toast.makeText(this, "Welcome, $name!", Toast.LENGTH_SHORT).show()
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-                finish()
-            }
-        }
+      if (validateInput(name, email, pass, confirm)) {
+        performRegistration(id, name, email, pass, dept)
+      }
+    }
+  }
 
-        tvLogin.setOnClickListener {
-            finish()
-        }
+  private fun setupDepartmentSpinner() {
+    val departments = arrayOf("CAHS", "CAS", "CCJE", "CEA", "CELA", "CHTM", "CITE", "CMA")
+    val adapter = ArrayAdapter(this, R.layout.spinner_item, departments)
+    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+    spinnerDepartment.adapter = adapter
+  }
+
+  private fun checkFields() {
+    val id = etEmployeeId.text.toString().trim()
+    val name = etFullName.text.toString().trim()
+    val email = etEmail.text.toString().trim()
+    val pass = etPassword.text.toString()
+    val confirm = etConfirmPassword.text.toString()
+    val isChecked = cbTerms.isChecked
+
+    if (btnRegister.isEnabled) {
+      btnRegister.alpha = 1.0f
+    } else {
+      btnRegister.alpha = 0.5f
     }
 
-    private fun checkFields() {
-        val name = etFullName.text.toString().trim()
-        val email = etEmail.text.toString().trim()
-        val department = etDepartment.text.toString().trim()
-        val password = etPassword.text.toString()
-        val confirmPassword = etConfirmPassword.text.toString()
-        val isChecked = cbTerms.isChecked
+    btnRegister.isEnabled = id.isNotEmpty() &&
+            name.isNotEmpty() &&
+            email.isNotEmpty() &&
+            pass.length >= 8 &&
+            confirm.isNotEmpty() &&
+            isChecked
+  }
 
-        btnRegister.isEnabled = name.isNotEmpty() && 
-                             email.isNotEmpty() && 
-                             department.isNotEmpty() && 
-                             password.length >= 8 && // Enforce 8 char minimum for button enabling
-                             confirmPassword.isNotEmpty() && 
-                             isChecked
-    }
+  private fun performRegistration(
+    id: String,
+    name: String,
+    email: String,
+    pass: String,
+    dept: String
+  ) {
+    val request = RegisterRequest(id, name, email, pass, dept)
 
-    private fun showTermsDialog() {
-        MaterialAlertDialogBuilder(this)
-            .setTitle("Terms & Privacy Policy")
-            .setMessage("1. Data Collection: We collect minimal data like name and email.\n\n" +
-                    "2. Usage: Your data is used for ordering and identification.\n\n" +
-                    "3. Security: We use industry standards to protect your data.\n\n" +
-                    "4. Payments: Cash and Stub are the only accepted methods.\n\n" +
-                    "By using this app, you agree to these terms.")
-            .setPositiveButton("I Understand") { dialog, _ ->
-                dialog.dismiss()
-            }
+    btnRegister.isEnabled = false
+    progressBar.visibility = View.VISIBLE
+
+    lifecycleScope.launch {
+      try {
+        val response = RetrofitClient.instance.registerUser(request)
+        progressBar.visibility = View.GONE
+
+        if (response.isSuccessful) {
+          Toast.makeText(this@CreateAccountActivity, "Registration Successful!", Toast.LENGTH_SHORT)
             .show()
+          startActivity(Intent(this@CreateAccountActivity, Login::class.java))
+          finish()
+        } else {
+          btnRegister.isEnabled = true
+          val errorMsg = response.errorBody()?.string() ?: "Registration failed"
+          Toast.makeText(this@CreateAccountActivity, errorMsg, Toast.LENGTH_LONG).show()
+        }
+      } catch (e: Exception) {
+        progressBar.visibility = View.GONE
+        btnRegister.isEnabled = true
+        Toast.makeText(this@CreateAccountActivity, "Server Error: ${e.message}", Toast.LENGTH_SHORT)
+          .show()
+      }
     }
+  }
 
-    private fun validateInput(name: String, email: String, department: String, password: String, confirmPassword: String): Boolean {
-        val emailLower = email.lowercase()
-        val isValidDomain = emailLower.endsWith("@phinmaed.com") || emailLower.endsWith("@gmail.com")
-        
-        if (!isValidDomain) {
-            Toast.makeText(this, "Use PhinmaEd or Gmail account", Toast.LENGTH_SHORT).show()
-            return false
-        }
-
-        // Strong Password Regex: 1 Uppercase, 1 Lowercase, 1 Number, 1 Special Char, Min 8 chars
-        val passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$".toRegex()
-        
-        if (!password.matches(passwordRegex)) {
-            Toast.makeText(this, "Password must be at least 8 chars with Uppercase, Lowercase, Number, and Special Char", Toast.LENGTH_LONG).show()
-            return false
-        }
-
-        if (password != confirmPassword) {
-            Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show()
-            return false
-        }
-
-        return true
+  private fun validateInput(name: String, email: String, pass: String, confirm: String): Boolean {
+    if (!email.lowercase().endsWith("@phinmaed.com") && !email.lowercase().endsWith("@gmail.com")) {
+      Toast.makeText(this, "Use PhinmaEd or Gmail account", Toast.LENGTH_SHORT).show()
+      return false
     }
+    if (pass != confirm) {
+      Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show()
+      return false
+    }
+    return true
+  }
+
+  private fun showTermsDialog() {
+    MaterialAlertDialogBuilder(this)
+      .setTitle("Terms & Privacy Policy")
+      .setMessage(
+        "1. Data Collection: We collect minimal data like name and email.\n\n" +
+                "2. Usage: Your data is used for ordering and identification.\n\n" +
+                "3. Security: We use industry standards to protect your data.\n\n" +
+                "4. Payments: Cash and Stub are the only accepted methods.\n\n" +
+                "By using this app, you agree to these terms."
+      )
+      .setPositiveButton("I Understand") { dialog, _ ->
+        dialog.dismiss()
+      }
+      .show()
+  }
 }

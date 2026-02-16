@@ -139,6 +139,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/passwordContainer" />
 
+      <ProgressBar
+          android:id="@+id/progressBar"
+          android:layout_width="40dp"
+          android:layout_height="40dp"
+          android:layout_marginTop="16dp"
+          android:visibility="gone"
+          android:indeterminateTint="@color/primary"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@id/forgotPassword"
+          app:layout_constraintBottom_toTopOf="@id/loginButton" />
+
         <!-- Login Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/loginButton"
