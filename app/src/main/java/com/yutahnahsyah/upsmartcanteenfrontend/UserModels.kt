@@ -23,5 +23,6 @@ data class UserData(
   val employee_id: String,
   val full_name: String,
   val email: String,
-  val department: String
+  val department: String,
+  val profile_picture_url: String?
 )

@@ -75,9 +75,17 @@ class Login : BaseActivity() {
         if (response.isSuccessful) {
           val token = response.body()?.token
 
-          val intent = Intent(this@Login, MainActivity::class.java)
-          startActivity(intent)
-          finish()
+          if (token != null) {
+            val sharedPref = getSharedPreferences("UserPrefs", android.content.Context.MODE_PRIVATE)
+            with(sharedPref.edit()) {
+              putString("auth_token", token)
+              apply()
+            }
+
+            val intent = Intent(this@Login, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+          }
         } else {
           val errorMsg = "Invalid Credentials"
           Toast.makeText(this@Login, errorMsg, Toast.LENGTH_SHORT).show()
