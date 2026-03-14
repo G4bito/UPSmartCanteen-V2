@@ -184,7 +184,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
                             android:text="Contact Support"
-                            android:textColor="#444444"
+                            android:textColor="#0000FF "
                             android:textSize="14sp" />
                     </LinearLayout>
                 </LinearLayout>

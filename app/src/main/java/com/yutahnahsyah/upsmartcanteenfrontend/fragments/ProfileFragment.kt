@@ -19,7 +19,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.yutahnahsyah.upsmartcanteenfrontend.RetrofitClient
 import com.bumptech.glide.Glide
-import com.bumptech.glide.signature.ObjectKey
 
 class ProfileFragment : Fragment() {
 
@@ -89,7 +88,6 @@ class ProfileFragment : Fragment() {
 
   override fun onResume() {
     super.onResume()
-    // This MUST be here to refresh data when you come back from EditProfile
     val userNameTv = view?.findViewById<TextView>(R.id.userName)
     val userEmailTv = view?.findViewById<TextView>(R.id.userEmail)
     val profileIv = view?.findViewById<ImageView>(R.id.profileImage)
@@ -124,7 +122,7 @@ class ProfileFragment : Fragment() {
 
             if (!user.profile_picture_url.isNullOrEmpty()) {
               val cleanPath = user.profile_picture_url!!.trim().removePrefix("/")
-              val fullImageUrl = "http://192.168.68.104:3000/$cleanPath"
+              val fullImageUrl = "http://192.168.68.109:3000/$cleanPath"
               android.util.Log.d("GLIDE_DEBUG", "Loading into Glide: $fullImageUrl")
 
               Glide.with(this@ProfileFragment)
@@ -147,7 +145,6 @@ class ProfileFragment : Fragment() {
           )
         }
       } catch (e: Exception) {
-        // This will tell us if it's a Timeout, Connection Refused, or JSON error
         android.util.Log.e("PROFILE_DEBUG", "FATAL EXCEPTION during API call", e)
       }
     }

@@ -136,7 +136,7 @@ class EditProfileFragment : Fragment() {
           emailEt.setText(user.email)
 
           if (!user.profile_picture_url.isNullOrEmpty()) {
-            val fullImageUrl = "http://192.168.68.104:3000/${user.profile_picture_url}"
+            val fullImageUrl = "http://192.168.68.109:3000/${user.profile_picture_url}"
             Glide.with(this@EditProfileFragment)
               .load(fullImageUrl)
               .circleCrop()
